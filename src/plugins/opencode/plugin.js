@@ -91,7 +91,7 @@ function reinforcementLine(mode) {
   // Minimal anchor, mirrors caveman-mode-tracker.js: appended to every
   // prompt, so extra words are re-paid on all later turns. The full ruleset
   // comes from the always-on AGENTS.md — this only re-points attention at it.
-  return 'CAVEMAN MODE ACTIVE (' + mode + ') — session ruleset applies.';
+  return "CAVEMAN MODE ACTIVE (" + mode + ") — session ruleset applies. Reply in user's language — caveman = terse, not English.";
 }
 
 // Parse a prompt for slash-command activation or natural-language toggles.

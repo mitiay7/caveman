@@ -6,7 +6,17 @@ file, one entry per integration commit.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/);
 versions follow upstream releases with a `-fable.N` fork suffix.
 
-## [Unreleased]
+## [v1.10.0-fable.1] — 2026-07-09
+
+Curated fork release: five community PRs pending on upstream, reviewed and
+integrated with authorship preserved, plus the E6 trigger narrowing deferred
+from v1.9.2-fable.1. Net token accounting: SessionStart injection grows
+~+200 tokens (Lists rule +170–190, language fold +~25, smart row/examples
+filtered out for non-smart sessions); every turn saves ~20 tokens
+(reinforcement −35→−15) and every session saves ~160 tokens of always-loaded
+frontmatter descriptions plus ~135 from the E6/description rework — long
+sessions come out ahead, and the additions buy correctness (list layout,
+language stability, no accidental mode flips).
 
 ### Added
 - New `smart` intensity level — selectivity compression for

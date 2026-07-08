@@ -26,7 +26,7 @@ const SETTINGS = require('./lib/settings');
 const OPENCLAW = require('./lib/openclaw');
 const { stripOpencodeAgentTools } = require('./lib/opencode-agent');
 
-const REPO = 'JuliusBrussee/caveman';
+const REPO = 'mitiay7/caveman';
 // Pin remote fetches to an immutable release tag, not the moving `main`
 // branch (issue #261). A push to main must never silently change what a
 // curl|bash / detached-script install downloads and executes. Bump this to
