@@ -62,7 +62,7 @@ process.stdin.on('end', () => {
           /\bcaveman\s+mode\s+(on|please|now)\b/.test(prompt) ||
           /^caveman(\s+mode)?\s*[.!]*$/.test(prompt) ||
           /\b(less tokens|fewer tokens|be brief|be terse|shorter answers)\b(?!\s+(in|for|on|about|when|during|with)\b)/.test(prompt)) {
-        const mode = getDefaultMode();
+        const mode = getDefaultMode(data.cwd);
         if (mode !== 'off') {
           recordModeChange(claudeDir, mode); // #601: timestamped transition log
           safeWriteFlag(flagPath, mode);
@@ -119,9 +119,11 @@ process.stdin.on('end', () => {
       } else if (cmd === '/caveman-compress' || cmd === '/caveman:caveman-compress') {
         mode = 'compress';
       } else if (cmd === '/caveman' || cmd === '/caveman:caveman') {
-        // Bare /caveman → activate at configured default
+        // Bare /caveman → activate at configured default. Resolve against the
+        // per-event cwd (like the NL-activation site above) so repo-local
+        // config tracks mid-session directory changes, not the spawn cwd.
         if (!arg) {
-          mode = getDefaultMode();
+          mode = getDefaultMode(data.cwd);
         } else if (arg === 'off' || arg === 'stop' || arg === 'disable') {
           mode = 'off';
         } else if (arg === 'wenyan-full') {

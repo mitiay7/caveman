@@ -35,17 +35,24 @@ class ModeTrackerTests(unittest.TestCase):
     def tearDown(self):
         self._tmp.cleanup()
 
-    def send(self, prompt):
+    def send(self, prompt, cwd=None):
         env = os.environ.copy()
         env.pop("CAVEMAN_DEFAULT_MODE", None)
+        # Scrub XDG_CONFIG_HOME too: getConfigDir() prefers it over HOME, so a
+        # developer's real caveman user config (e.g. defaultMode "off") would
+        # otherwise leak into these assertions.
+        env.pop("XDG_CONFIG_HOME", None)
         env["HOME"] = self._tmp.name
         env["USERPROFILE"] = self._tmp.name
         env["CLAUDE_CONFIG_DIR"] = str(self.claude_dir)
+        payload = {"prompt": prompt}
+        if cwd is not None:
+            payload["cwd"] = str(cwd)
         return subprocess.run(
             ["node", str(TRACKER)],
             cwd=REPO_ROOT,
             env=env,
-            input=json.dumps({"prompt": prompt}),
+            input=json.dumps(payload),
             text=True,
             capture_output=True,
             check=True,
@@ -190,6 +197,38 @@ class ModeTrackerTests(unittest.TestCase):
         self.assertFalse(self.prev.exists(), "prev file must not survive deactivation")
         self.send("ordinary prompt")
         self.assertIsNone(self.flag_value(), "nothing should resurrect the mode")
+
+    # ── #634 (adapted): repo-local config resolves against per-event cwd ─
+
+    def _make_repo(self, default_mode):
+        repo = Path(self._tmp.name) / "project"
+        repo.mkdir()
+        (repo / ".caveman.json").write_text(
+            json.dumps({"defaultMode": default_mode})
+        )
+        return repo
+
+    def test_nl_trigger_uses_stdin_cwd_for_repo_config(self):
+        # The hook's spawn cwd (REPO_ROOT) has no .caveman.json; only the cwd
+        # sent on stdin does. Pre-fix the walk started at the spawn cwd and
+        # this activated at 'full' instead of the repo's 'lite'.
+        repo = self._make_repo("lite")
+        self.send("activate caveman", cwd=repo)
+        self.assertEqual(self.flag_value(), "lite")
+
+    def test_nl_trigger_respects_off_in_stdin_cwd_repo(self):
+        # Repo-local defaultMode "off" must suppress NL auto-activation for a
+        # session sitting in that repo, regardless of the hook's spawn cwd.
+        repo = self._make_repo("off")
+        self.send("activate caveman", cwd=repo)
+        self.assertIsNone(self.flag_value())
+
+    def test_bare_slash_caveman_uses_stdin_cwd_for_repo_config(self):
+        # The call site the original PR missed: bare /caveman must resolve the
+        # configured default against the per-event cwd too.
+        repo = self._make_repo("ultra")
+        self.send("/caveman", cwd=repo)
+        self.assertEqual(self.flag_value(), "ultra")
 
 
 if __name__ == "__main__":
