@@ -1,5 +1,5 @@
 ---
-description: Activate caveman compression mode (lite | full | ultra | wenyan | off)
+description: Activate caveman compression mode (lite | smart | full | ultra | wenyan | off)
 ---
 Activate caveman mode: $ARGUMENTS
 

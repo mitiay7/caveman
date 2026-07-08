@@ -121,12 +121,13 @@ npx skills add JuliusBrussee/caveman -a cursor
 
 ## Pick your grunt
 
-Six levels. Switch anytime with `/caveman <level>`. Level sticks until you change it or the session ends.
+Seven levels. Switch anytime with `/caveman <level>`. Level sticks until you change it or the session ends.
 
 | Level | Same sentence, shrunk |
 |---|---|
 | *normal agent* | You should wrap the object in `useMemo`, since a new reference is created on every render. |
 | `lite` | Wrap object in `useMemo`. New ref created every render. |
+| `smart` | Wrap the object in `useMemo` — a new reference is created on every render. Grammar intact; the savings come at reply scale (recaps, restated tool output, options not chosen get dropped). |
 | `full` *(default)* | New ref each render. Wrap object in `useMemo`. |
 | `ultra` | New ref/render. `useMemo` it. |
 | `wenyan` | New ref every render, so wrap in `useMemo` — rendered in classical Chinese, shorter still. |
@@ -134,11 +135,14 @@ Six levels. Switch anytime with `/caveman <level>`. Level sticks until you chang
 > [!NOTE]
 > **Speak your tongue.** Caveman keeps your language. Write Portuguese, caveman grunt Portuguese. Spanish, French, same. It compresses the *style*, never translates. `wenyan` mode is the exception on purpose: classical Chinese packs the most meaning per *character* (characters, not tokens — see [Honest Numbers](docs/HONEST-NUMBERS.md)).
 
+> [!TIP]
+> **Model compatibility.** Some agent harnesses instruct full-sentence readability in their system prompt — Claude Code on Fable-class models forbids fragments, dropped articles, and arrow chains. There `full`/`ultra` fight the harness every turn, and a standing instruction conflict degrades output. Prefer `lite` or `smart` on such harnesses: selectivity saves the big tokens (content) while the readability rules stay unbroken. Same hunt, fewer grunts, no fight with cave rules.
+
 ## What you get
 
 | Command | What it does |
 |---|---|
-| `/caveman [lite\|full\|ultra\|wenyan-lite\|wenyan-full\|wenyan-ultra\|off]` | Compress every reply. Level sticks for the session. `wenyan` = `wenyan-full`. |
+| `/caveman [lite\|smart\|full\|ultra\|wenyan-lite\|wenyan-full\|wenyan-ultra\|off]` | Compress every reply. Level sticks for the session. `wenyan` = `wenyan-full`. |
 | `/caveman-commit` | Conventional Commit messages, ≤50-char subject. Why over what. |
 | `/caveman-review` | One-line PR comments: `L42: 🔴 bug: user null. Add guard.` |
 | `/caveman-stats` | Real session token usage, lifetime savings, USD. Tweetable line with `--share`. |

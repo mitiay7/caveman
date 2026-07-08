@@ -175,6 +175,28 @@ class HookScriptTests(unittest.TestCase):
             self.assertIn("| **full** |", result.stdout)
             self.assertNotIn("| **lite** |", result.stdout)
 
+    # #629/#630 (adapted) — smart level must survive the per-level filter:
+    # its table row and col-0 "- smart: " example lines are the model's only
+    # behavioral anchor when smart is active.
+    def test_activate_smart_mode_filters_table_and_examples(self):
+        with tempfile.TemporaryDirectory(prefix="caveman-hooks-smart-") as tmp:
+            home = Path(tmp)
+            (home / ".claude").mkdir(parents=True)
+
+            result = self.run_cmd(
+                ["node", "src/hooks/caveman-activate.js"],
+                home,
+                extra_env={"CAVEMAN_DEFAULT_MODE": "smart"},
+            )
+
+            self.assertIn("CAVEMAN MODE ACTIVE — level: smart", result.stdout)
+            self.assertIn("| **smart** |", result.stdout)
+            self.assertIn("- smart: ", result.stdout)
+            # Other levels' rows and examples are filtered out
+            self.assertNotIn("| **full** |", result.stdout)
+            self.assertNotIn("- lite: ", result.stdout)
+            self.assertNotIn("- ultra: ", result.stdout)
+
     def test_activate_finds_skill_beside_config_dir_hooks(self):
         # Standalone layout: hooks at $CLAUDE_CONFIG_DIR/hooks/, skill installed
         # at $CLAUDE_CONFIG_DIR/skills/caveman/SKILL.md

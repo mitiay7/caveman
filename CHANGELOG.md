@@ -9,6 +9,34 @@ versions follow upstream releases with a `-fable.N` fork suffix.
 ## [Unreleased]
 
 ### Added
+- New `smart` intensity level — selectivity compression for
+  readability-enforcing harnesses (adapted from upstream PR #630 by
+  @tristanmuzzu, who also specced it in issue #629, with example-line and
+  placement grafts from PR #642 by @Shevanio). Cut content, not grammar:
+  full sentences, zero fluff — drops recaps of unchanged plans, restated
+  tool output, options not chosen, pleasantries, hedging, repeated
+  paths/ids; complex replies end with one plain-language TLDR line. Differs
+  from `lite` at reply scale (what gets included), not sentence scale. On
+  harnesses that instruct full-sentence readability (Claude Code on
+  Fable-class models), `full`/`ultra` fight the harness every turn — prefer
+  `lite` or `smart` there (rationale in README only; zero SKILL.md body
+  bytes for the note, and the smart table row + `- smart:` example lines
+  are filtered per level by the activate hook, so non-smart sessions pay
+  nothing). Plumbing: `smart` added to `VALID_MODES` in
+  `src/hooks/caveman-config.js` (transitively enables `/caveman smart`
+  parsing, `readFlag`, `CAVEMAN_DEFAULT_MODE`, config `defaultMode`, and
+  the opencode plugin), both statusline whitelists (`.sh`/`.ps1`), every
+  switch-hint surface (SKILL.md, activate fallback, `caveman-activate.md`,
+  `caveman-init.js`, openclaw bootstrap + inline fallback,
+  `commands/caveman.md` — body also rewritten level-agnostic), the
+  caveman-help card, README level/slash tables, and secondary docs. The
+  per-turn reinforcement needed no change: PR #660's slim generic anchor is
+  already correct for smart. New tests: `/caveman smart` writes the flag
+  and the anchor carries no grammar-compression text
+  (`tests/test_mode_tracker.py`); activation at `CAVEMAN_DEFAULT_MODE=smart`
+  injects only the smart row and smart example lines
+  (`tests/test_hooks.py`). Same commit syncs the plugins mirror and
+  rebuilds `dist/caveman.skill`.
 - New `## Lists` rule in the caveman skill: keep list layout under
   compression — one item per line, sub-items on their own indented lines,
   never a child list inlined into its parent numbered step. Fixes caveman

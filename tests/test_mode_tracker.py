@@ -145,6 +145,23 @@ class ModeTrackerTests(unittest.TestCase):
         self.send("/caveman ultra")
         self.assertEqual(self.flag_value(), "ultra")
 
+    # ── #629/#630 (adapted): smart level ────────────────────────────────
+
+    def test_slash_caveman_smart_switch(self):
+        self.send("/caveman smart")
+        self.assertEqual(self.flag_value(), "smart")
+
+    def test_smart_reinforcement_names_level_without_grammar_compression(self):
+        # smart = cut content, not grammar. The per-turn anchor (slimmed by
+        # #660 to a generic re-pointer at the SessionStart ruleset) must name
+        # the level and must NOT re-inject grammar-compression instructions —
+        # that is the exact standing conflict smart exists to eliminate.
+        self.flag.write_text("smart")
+        r = self.send("ordinary follow-up question")
+        self.assertIn("CAVEMAN MODE ACTIVE (smart)", r.stdout)
+        self.assertNotIn("Drop articles", r.stdout)
+        self.assertNotIn("Fragments OK", r.stdout)
+
     def test_slash_caveman_off(self):
         self.flag.write_text("full")
         self.send("/caveman off")

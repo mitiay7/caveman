@@ -6,11 +6,12 @@ Talk like smart caveman. Same brain, fewer tokens.
 
 Compress every model response to caveman-style prose. Drops articles, filler, pleasantries, and hedging. Keeps every technical detail, code block, error string, and symbol exact. Cuts 65% of output tokens (measured) with full accuracy preserved. Mode persists for the whole session until changed or stopped.
 
-Six intensity levels:
+Seven intensity levels:
 
 | Level | What change |
 |-------|-------------|
 | `lite` | Drop filler/hedging. Sentences stay full. Professional but tight. |
+| `smart` | Cut content, not grammar. Full sentences; drops recaps, restated tool output, options not chosen. For harnesses that enforce readability. |
 | `full` | Default. Drop articles, fragments OK, short synonyms. |
 | `ultra` | Bare fragments. Abbreviations (DB, auth, fn). Arrows for causality. |
 | `wenyan-lite` | Classical Chinese register, light compression. |
@@ -24,6 +25,7 @@ Auto-clarity rule: caveman drops to normal prose for security warnings, irrevers
 ```
 /caveman              # full mode (default)
 /caveman lite         # lighter compression
+/caveman smart        # cut content, not grammar
 /caveman ultra        # extreme compression
 /caveman wenyan       # classical Chinese
 stop caveman          # back to normal prose

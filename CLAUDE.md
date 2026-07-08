@@ -174,6 +174,7 @@ Reads JSON from stdin. Three responsibilities:
 **1. Slash-command activation.** If prompt starts with `/caveman`, writes mode to flag file via `safeWriteFlag`:
 - `/caveman` → configured default (see `caveman-config.js`, defaults to `full`)
 - `/caveman lite` → `lite`
+- `/caveman smart` → `smart`
 - `/caveman ultra` → `ultra`
 - `/caveman wenyan` or `/caveman wenyan-full` → `wenyan` (alias) / `wenyan-full`
 - `/caveman wenyan-lite` → `wenyan-lite`
@@ -216,7 +217,7 @@ Each skill has a human-facing `README.md` alongside the LLM-facing `SKILL.md`. T
 
 ### Intensity levels
 
-Defined in `skills/caveman/SKILL.md`. Six levels: `lite`, `full` (default), `ultra`, `wenyan-lite`, `wenyan-full`, `wenyan-ultra`. Persists until changed or session ends.
+Defined in `skills/caveman/SKILL.md`. Seven levels: `lite`, `smart`, `full` (default), `ultra`, `wenyan-lite`, `wenyan-full`, `wenyan-ultra`. Persists until changed or session ends.
 
 ### Auto-clarity rule
 
