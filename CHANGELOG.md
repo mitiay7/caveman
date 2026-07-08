@@ -9,6 +9,15 @@ versions follow upstream releases with a `-fable.N` fork suffix.
 ## [Unreleased]
 
 ### Changed
+- Skill frontmatter descriptions trimmed ~36% (348 → 223 words across all
+  7 skills), saving ~160 tokens of fixed per-session cost — descriptions load
+  into the system prompt whether or not a skill fires. All slash-command
+  triggers and load-bearing semantics retained (upstream PR #662 by
+  @jjmendezrodriguez, merged with authorship preserved). The merge also
+  re-syncs the `plugins/caveman/skills/caveman-stats/SKILL.md` mirror, which
+  the PR left with the old description, and rebuilds `dist/caveman.skill`
+  from the merged tree so the trimmed frontmatter and this fork's body edits
+  both land in the zip payload.
 - Per-turn reinforcement shrunk from ~35 to ~15 tokens in
   `src/hooks/caveman-mode-tracker.js` and the opencode plugin: the
   UserPromptSubmit reminder now only re-points attention at the SessionStart
