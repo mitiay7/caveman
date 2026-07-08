@@ -36,6 +36,19 @@ versions follow upstream releases with a `-fable.N` fork suffix.
   UserPromptSubmit reminder now only re-points attention at the SessionStart
   ruleset instead of restating rules every turn (upstream PR #660 by
   @jjmendezrodriguez, merged with authorship preserved).
+- Language preservation hardened against English drift (adapted from
+  upstream PR #658 by @chengzhen49959): the skill's language rule now states
+  that the rules are written in English but the output language always
+  matches the user, and that drop-rules apply to per-language filler
+  equivalents (e.g. Chinese 的/其实/一些); the per-turn reinforcement anchor
+  in `src/hooks/caveman-mode-tracker.js` gains a ~10-token "Reply in user's
+  language" clause — previously the one injection point with no language
+  rule, whose English-only text repeated every turn dragged non-English
+  sessions toward English replies. Deliberately not taken from the PR: the
+  duplicate `## Language` section (the rule already exists), the redundant
+  activate-fallback hunk, and the 了 example (dropping the aspect marker can
+  flip completed → imperative meaning, colliding with the NEVER-drop rule).
+  Same commit re-syncs the plugins mirror and rebuilds `dist/caveman.skill`.
 
 ### Fixed
 - Repo-local config (`.caveman/config.json` / `.caveman.json`) now resolves

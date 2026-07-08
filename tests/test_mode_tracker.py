@@ -230,6 +230,16 @@ class ModeTrackerTests(unittest.TestCase):
         self.send("/caveman", cwd=repo)
         self.assertEqual(self.flag_value(), "ultra")
 
+    # ── #658 (adapted): per-turn anchor carries the language clause ─────
+
+    def test_reinforcement_includes_language_clause(self):
+        # The per-turn anchor is the one injection point with no language
+        # rule; repeated English-only, it drags non-English sessions toward
+        # English replies. It must carry the reply-in-user's-language clause.
+        self.flag.write_text("full")
+        r = self.send("ordinary follow-up question")
+        self.assertIn("Reply in user's language", r.stdout)
+
 
 if __name__ == "__main__":
     unittest.main()
