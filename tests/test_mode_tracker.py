@@ -119,8 +119,40 @@ class ModeTrackerTests(unittest.TestCase):
         self.send("be brief in the summary section")
         self.assertIsNone(self.flag_value())
 
-    def test_unscoped_brevity_activates(self):
+    # ── E6: one-off brevity is not a mode switch ────────────────────────
+
+    def test_bare_brevity_does_not_activate(self):
+        # E6: "be brief" / "less tokens" alone is a single-response
+        # instruction — it must NOT flip the persistent session flag.
         self.send("be brief")
+        self.assertIsNone(self.flag_value())
+        self.send("less tokens")
+        self.assertIsNone(self.flag_value())
+        self.send("be terse please")
+        self.assertIsNone(self.flag_value())
+
+    def test_brevity_with_incidental_always_does_not_activate(self):
+        # "always" about something else must not count as a durable marker.
+        self.send("tests always fail on ci, be brief")
+        self.assertIsNone(self.flag_value())
+
+    def test_durable_brevity_activates(self):
+        self.send("always be brief")
+        self.assertEqual(self.flag_value(), "full")
+        self.flag.unlink()
+        self.send("from now on, be brief")
+        self.assertEqual(self.flag_value(), "full")
+
+    def test_brevity_from_now_on_activates(self):
+        self.send("use fewer tokens from now on")
+        self.assertEqual(self.flag_value(), "full")
+
+    def test_brevity_for_this_session_activates(self):
+        self.send("shorter answers for this session")
+        self.assertEqual(self.flag_value(), "full")
+
+    def test_use_caveman_still_works(self):
+        self.send("use caveman")
         self.assertEqual(self.flag_value(), "full")
 
     def test_activate_caveman_still_works(self):

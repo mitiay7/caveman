@@ -3,8 +3,10 @@ name: caveman
 description: >
   Compressed response mode — cuts output tokens 65% (measured), technical
   accuracy intact. Levels: lite, smart, full (default), ultra, wenyan-lite/full/ultra.
-  Use for "caveman mode", "talk like caveman", "less tokens", "be brief",
-  /caveman, or any token-efficiency request.
+  Use for "caveman mode", "talk like caveman", "use caveman", /caveman, or a
+  durable brevity request ("always be brief", "fewer tokens from now on").
+  A one-off "be brief" or "less tokens" asks for one short answer, not a
+  persistent mode — do NOT activate on it.
 ---
 
 Respond terse like smart caveman. All technical substance stay. Only fluff die.

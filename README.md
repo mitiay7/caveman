@@ -96,6 +96,8 @@ irm https://raw.githubusercontent.com/JuliusBrussee/caveman/main/install.ps1 | i
 
 > [!TIP]
 > **Turn it on:** type `/caveman` or say *"talk like caveman"*. **Turn it off:** type `/caveman off` or say *"normal mode"*. On Claude Code, Codex, and Gemini it's already on from message one. No command needed.
+>
+> Historical note: bare brevity phrases ("be brief", "less tokens") used to switch on caveman for the whole session — removed; they now get you one short answer, nothing sticky. To turn the mode on, name caveman or type `/caveman` (durable phrasing like "always be brief" still works).
 
 <details>
 <summary><strong>Install for one agent, or any of 30+ others</strong></summary>

@@ -78,6 +78,33 @@ versions follow upstream releases with a `-fable.N` fork suffix.
   flip completed → imperative meaning, colliding with the NEVER-drop rule).
   Same commit re-syncs the plugins mirror and rebuilds `dist/caveman.skill`.
 
+### Removed
+- Bare brevity phrases ("be brief", "less tokens", "be terse", "shorter
+  answers") no longer auto-activate caveman as a persistent session mode
+  (E6 trigger narrowing). A one-off brevity request asks for one short
+  answer; silently flipping a sticky mode on it distorted every subsequent
+  reply. Both trigger surfaces narrowed in lockstep: the
+  `caveman-mode-tracker.js` UserPromptSubmit regex now requires an explicit
+  durability marker — "always" / "from now on" / "going forward" /
+  "by default" directly before the phrase, or a same-sentence session-scope
+  marker ("from now on", "going forward", "by default", "for this session")
+  within 30 characters after it — and the skill frontmatter description
+  drops "less tokens" / "be brief" / the "any token-efficiency request"
+  catch-all as activators, gaining an explicit do-NOT-activate-on-one-off
+  sentence (the model-side guard the hook cannot provide) plus the restored
+  literal "use caveman" trigger that the #662 trim dropped. Explicit
+  activation is unchanged: "caveman mode", "talk like caveman",
+  "use caveman", "activate caveman", bare "caveman", and all `/caveman`
+  slash paths. Durable phrasings ("always be brief", "use fewer tokens from
+  now on", "shorter answers for this session") still activate. Asymmetry is
+  deliberate: a false negative costs one `/caveman`; a false positive
+  silently compresses the rest of the session. Description tax +~25 tokens
+  (the negative sentence is load-bearing — do not trim it as fluff). Tests:
+  bare/one-off phrases and incidental "always" stay off; durable
+  prefix/suffix markers and "use caveman" each pinned
+  (`tests/test_mode_tracker.py`). Same commit adds a README historical
+  note, syncs the plugins mirror, and rebuilds `dist/caveman.skill`.
+
 ### Fixed
 - Repo-local config (`.caveman/config.json` / `.caveman.json`) now resolves
   against the session's per-event `cwd` (sent on the hook's stdin) instead of

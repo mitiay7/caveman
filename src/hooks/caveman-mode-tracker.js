@@ -52,16 +52,20 @@ process.stdin.on('end', () => {
 
     // Natural language activation (e.g. "activate caveman", "turn on caveman
     // mode", "talk like caveman"). README tells users they can say these.
-    // Also brevity requests ("less tokens", "be brief/terse", "fewer tokens",
-    // "shorter answers") — but not when scoped to a single section
-    // ("be brief in the summary"), which is a one-off instruction, not a
-    // session-wide mode switch.
+    // Brevity phrases ("less tokens", "be brief/terse", "fewer tokens",
+    // "shorter answers") are one-off response instructions, NOT mode
+    // switches: bare "be brief" must never flip the persistent flag. They
+    // activate only when explicitly marked durable — a durability marker
+    // ("always", "from now on", "going forward", "by default") directly
+    // before the phrase, or a session-scope marker ("from now on",
+    // "going forward", "by default", "for this session") in the same
+    // sentence within 30 chars after it.
     if (!wantsOff && !isQuestion) {
       if (/\b(activate|enable|start|turn on|use|switch to|want|give me)\b[^.]{0,40}\bcaveman\b/.test(prompt) ||
           /\btalk like\b[^.]{0,40}\bcaveman\b/.test(prompt) ||
           /\bcaveman\s+mode\s+(on|please|now)\b/.test(prompt) ||
           /^caveman(\s+mode)?\s*[.!]*$/.test(prompt) ||
-          /\b(less tokens|fewer tokens|be brief|be terse|shorter answers)\b(?!\s+(in|for|on|about|when|during|with)\b)/.test(prompt)) {
+          /\b((always|from now on|going forward|by default),?( please)? (be (brief|terse)|(use )?(less|fewer) tokens|shorter answers)|(be (brief|terse)|(less|fewer) tokens|shorter answers)\b[^.]{0,30}\b(from now on|going forward|by default|for (the rest of )?(this|the) (session|chat|conversation)))\b/.test(prompt)) {
         const mode = getDefaultMode(data.cwd);
         if (mode !== 'off') {
           recordModeChange(claudeDir, mode); // #601: timestamped transition log
