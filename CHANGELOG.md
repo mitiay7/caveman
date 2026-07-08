@@ -8,6 +8,19 @@ versions follow upstream releases with a `-fable.N` fork suffix.
 
 ## [Unreleased]
 
+### Added
+- New `## Lists` rule in the caveman skill: keep list layout under
+  compression — one item per line, sub-items on their own indented lines,
+  never a child list inlined into its parent numbered step. Fixes caveman
+  smashing lists (worst case: nested child lists) into run-on lines, a gap
+  Auto-Clarity previously covered only by dropping caveman entirely
+  (upstream PR #669 by @pierrz, cherry-picked with authorship preserved).
+  Costs ~170–190 tokens per SessionStart injection; no added line matches
+  the activate-hook filter regexes, so the section emits intact for all
+  levels including wenyan. Same commit syncs the
+  `plugins/caveman/skills/caveman/SKILL.md` mirror and rebuilds
+  `dist/caveman.skill` from the updated tree.
+
 ### Changed
 - Skill frontmatter descriptions trimmed ~36% (348 → 223 words across all
   7 skills), saving ~160 tokens of fixed per-session cost — descriptions load
