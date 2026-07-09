@@ -31,6 +31,23 @@ versions follow upstream releases with a `-fable.N` fork suffix.
   `caveman-mode-tracker.js` entry had gone stale when the #537 envelope
   fix landed without a manifest regen (would have broken
   `CAVEMAN_REF=main` installs at the integrity gate).
+- `skills/caveman/SKILL.md` self-consistency batch (audit P3/P4/P8/P9;
+  plugin mirror and `dist/caveman.skill` rebuilt in the same commit):
+  - ultra example no longer says "obj" — it violated ultra's own
+    no-prose-abbreviations rule, and few-shot examples dominate rule text;
+    "obj" added to the banned-abbreviation list.
+  - Auto-Clarity example no longer models "Caveman resume." inside the
+    quoted output (self-announcement forbidden by the No-self-reference
+    rule); the quote ends at "Verify backup exist first." with an unquoted
+    note marking the resumed line.
+  - smart level: TLDR threshold defined (3+ steps/sections or >8 lines;
+    shorter reply no TLDR — the old smart example attached a TLDR to a
+    2-sentence reply, contradicting the "complex reply" qualifier);
+    "options not chosen" scoped to alternatives the assistant weighed,
+    keeping comparisons the user asked for.
+  - connection-pooling example gains its missing `wenyan-lite` line — the
+    SessionStart injection at wenyan-lite previously carried an orphaned
+    "Example —" header with zero example lines under it.
 
 ## [v1.10.0-fable.1] — 2026-07-09
 
