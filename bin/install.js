@@ -1315,9 +1315,13 @@ function uninstall(ctx) {
     if (prunedHermes) ok('  pruned caveman skills from Hermes');
   }
 
-  // Flag file
-  const flag = path.join(configDir, '.caveman-active');
-  if (fs.existsSync(flag) && !opts.dryRun) { try { fs.unlinkSync(flag); } catch (_) {} }
+  // Caveman-created residue in the config dir: activation flag + mode
+  // transition log (#601). settings.json.bak is deliberately left behind —
+  // it's the user's recovery copy of pre-caveman settings.
+  for (const f of ['.caveman-active', '.caveman-mode-log.jsonl']) {
+    const p = path.join(configDir, f);
+    if (fs.existsSync(p) && !opts.dryRun) { try { fs.unlinkSync(p); } catch (_) {} }
+  }
 
   process.stdout.write('\n');
   ok('uninstall done.');

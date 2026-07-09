@@ -6,6 +6,32 @@ file, one entry per integration commit.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/);
 versions follow upstream releases with a `-fable.N` fork suffix.
 
+## [Unreleased]
+
+### Fixed
+- Claude Code plugin installs now register the bundled skills and commands:
+  `.claude-plugin/plugin.json` declares explicit `"skills": "./skills/"` and
+  `"commands": "./commands/"` paths. With the marketplace `source: "./"`
+  layout, omitting the keys meant only the hooks loaded — every
+  `/caveman:*` command reported "Unknown command" (inherited upstream
+  issue #569).
+- `skills-lock.json`: the cavecrew `computedHash` matched no revision of
+  `skills/cavecrew/SKILL.md` in either repo's history (stale since upstream
+  introduced the lock); regenerated against the shipped file and repointed
+  `source` to `mitiay7/caveman` (the fork's copy has diverged from
+  upstream). `tests/verify_repo.py` now recomputes every lock hash so the
+  gate fails on future drift.
+- `defaultMode: "off"` no longer injects a stray `OK` into session context:
+  the SessionStart hook (`src/hooks/caveman-activate.js`) emits empty
+  stdout in the off branch.
+- `--uninstall` now also removes `.caveman-mode-log.jsonl` (the #601 mode
+  transition log) from the config dir alongside `.caveman-active`;
+  `settings.json.bak` is deliberately kept as a recovery copy.
+- `src/hooks/checksums.sha256` regenerated to match the tree — the
+  `caveman-mode-tracker.js` entry had gone stale when the #537 envelope
+  fix landed without a manifest regen (would have broken
+  `CAVEMAN_REF=main` installs at the integrity gate).
+
 ## [v1.10.0-fable.1] — 2026-07-09
 
 Curated fork release: five community PRs pending on upstream, reviewed and
@@ -125,3 +151,6 @@ language stability, no accidental mode flips).
   PR's per-turn reinforcement gate was dropped because it silently suppressed
   the anchor after an explicit `/caveman <level>` in a `defaultMode: "off"`
   repo.
+
+[Unreleased]: https://github.com/mitiay7/caveman/compare/v1.10.0-fable.1...HEAD
+[v1.10.0-fable.1]: https://github.com/mitiay7/caveman/releases/tag/v1.10.0-fable.1

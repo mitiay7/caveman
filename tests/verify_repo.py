@@ -3,6 +3,7 @@
 
 from __future__ import annotations
 
+import hashlib
 import json
 import os
 import shutil
@@ -152,6 +153,26 @@ def verify_synced_files() -> None:
     )
 
     print("Synced copies, caveman.skill zip, and installer entrypoints OK")
+
+
+def verify_skills_lock() -> None:
+    section("Skills Lock")
+    lock = read_json(ROOT / "skills-lock.json")
+    ensure(isinstance(lock, dict) and isinstance(lock.get("skills"), dict), "skills-lock.json malformed")
+    for name, entry in lock["skills"].items():
+        skill_path = ROOT / entry["skillPath"]
+        ensure(skill_path.is_file(), f"skills-lock.json: {name} skillPath missing: {entry['skillPath']}")
+        actual = hashlib.sha256(skill_path.read_bytes()).hexdigest()
+        ensure(
+            actual == entry["computedHash"],
+            f"skills-lock.json: {name} computedHash stale — lock has {entry['computedHash']}, "
+            f"actual sha256 of {entry['skillPath']} is {actual}. Regenerate the lock entry.",
+        )
+        ensure(
+            entry.get("source") == "mitiay7/caveman",
+            f"skills-lock.json: {name} source must pin this fork (mitiay7/caveman), got {entry.get('source')!r}",
+        )
+    print("skills-lock.json hashes match the tree")
 
 
 def verify_manifests_and_syntax() -> None:
@@ -397,6 +418,7 @@ def main() -> int:
     checks = [
         verify_skill_frontmatter_upload_compatibility,
         verify_synced_files,
+        verify_skills_lock,
         verify_manifests_and_syntax,
         verify_powershell_static,
         verify_compress_fixtures,

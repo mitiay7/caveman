@@ -24,11 +24,12 @@ try {
 
 const mode = getDefaultMode();
 
-// "off" mode — skip activation entirely, don't write flag or emit rules
+// "off" mode — skip activation entirely, don't write flag or emit rules.
+// Emit NOTHING: SessionStart stdout is injected into session context, so
+// even a bare "OK" would leak stray bytes into every off-mode session.
 if (mode === 'off') {
   recordModeChange(claudeDir, null); // #601: timestamped transition log
   try { fs.unlinkSync(flagPath); } catch (e) {}
-  process.stdout.write('OK');
   process.exit(0);
 }
 
