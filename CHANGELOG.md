@@ -8,7 +8,20 @@ versions follow upstream releases with a `-fable.N` fork suffix.
 
 ## [Unreleased]
 
+## [v1.10.1-fable.1] — 2026-07-09
+
+Patch release: audit follow-up to v1.10.0-fable.1 — plugin skill
+registration, integrity-manifest freshness, slash-command envelope
+unwrapping, and a SKILL.md self-consistency batch. No new features; the
+SessionStart token budget is unchanged.
+
 ### Fixed
+- Slash-command invocations are unwrapped from the Claude Code
+  `<command-name>/<command-args>` envelope before trigger matching in
+  `src/hooks/caveman-mode-tracker.js`, covering both the one-line and
+  newline-separated envelope forms — `/caveman <level>` and `/caveman off`
+  now flip the session mode when delivered via the envelope (inherited
+  upstream issue #537).
 - Claude Code plugin installs now register the bundled skills and commands:
   `.claude-plugin/plugin.json` declares explicit `"skills": "./skills/"` and
   `"commands": "./commands/"` paths. With the marketplace `source: "./"`
@@ -169,5 +182,6 @@ language stability, no accidental mode flips).
   the anchor after an explicit `/caveman <level>` in a `defaultMode: "off"`
   repo.
 
-[Unreleased]: https://github.com/mitiay7/caveman/compare/v1.10.0-fable.1...HEAD
+[Unreleased]: https://github.com/mitiay7/caveman/compare/v1.10.1-fable.1...HEAD
+[v1.10.1-fable.1]: https://github.com/mitiay7/caveman/releases/tag/v1.10.1-fable.1
 [v1.10.0-fable.1]: https://github.com/mitiay7/caveman/releases/tag/v1.10.0-fable.1
